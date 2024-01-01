@@ -1,5 +1,5 @@
 # Problem Statement
-Zephyr Scale Server API cannot be used for Junit5 based test projects
+Not able to use Zephyr Scale Server API to publish Junit5 test results to Zephyr Scale Server / DC.
 
 ### Background
 - Zephyr JIRA plugin comes in two versions, namely Zephyr Scale Cloud & Zephyr Scale Data Center / Server
