@@ -1,0 +1,19 @@
+{
+  "version" : 1,
+  "executions" : [ {
+    "source" : "com.abtesting.academy.Junit4ExampleTwoTest.evenNumberTest",
+    "result" : "Failed"
+  }, {
+    "source" : "com.abtesting.academy.Junit4ExampleOneTest.failingTest",
+    "result" : "Failed",
+    "testCase" : {
+      "key" : "ABTA-1"
+    }
+  }, {
+    "source" : "com.abtesting.academy.Junit4ExampleOneTest.passingTest",
+    "result" : "Passed",
+    "testCase" : {
+      "name" : "Test that always passes"
+    }
+  } ]
+}

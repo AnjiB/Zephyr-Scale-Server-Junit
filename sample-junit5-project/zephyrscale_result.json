@@ -1,0 +1,35 @@
+{
+  "version" : 1,
+  "executions" : [ {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Passed"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Passed"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Failed: expected: <true> but was: <false>"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Passed"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Passed"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Failed: expected: <true> but was: <false>"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleTwoTest.evenNumberTest",
+    "result" : "Passed"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleOneTest.failingTest",
+    "result" : "Failed: Runtime Exception"
+  }, {
+    "source" : "com.abtesting.academy.Junit5ExampleOneTest.passingTest",
+    "result" : "Passed",
+    "testCase" : {
+      "key" : "ABCD-143",
+      "name" : "Test that always Green"
+    }
+  } ]
+}
