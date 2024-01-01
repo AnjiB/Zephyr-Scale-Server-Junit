@@ -23,77 +23,87 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ZephyrServerJunit5Extension implements TestWatcher, AfterAllCallback {
 
-	private static List<TestExecution> executions = Collections.synchronizedList(new ArrayList<TestExecution>());
+  private static final String FAILED = "Failed: ";
 
-	@Override
-	public void testSuccessful(ExtensionContext context) {
+  private static final String DISABLED = "Disabled: ";
 
-		TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
-		updateResult(testExecutionBuilder, "Passed");
-		executions.add(testExecutionBuilder.build());
-	}
+  private static final String ABORTED = "Aborted: ";
 
-	@Override
-	public void testAborted(ExtensionContext context, Throwable cause) {
+  private static final String PASSED = "Passed";
 
-		TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
-		updateResult(testExecutionBuilder, "Aborted: " + context.getExecutionException().get().getMessage());
-		executions.add(testExecutionBuilder.build());
-	}
+  private static final String ZEPHYRSCALE_RESULT_JSON_FILE_PATH = System.getProperty("reportFilePath", "./zephyrscale_result.json");
 
-	@Override
-	public void testDisabled(ExtensionContext context, Optional<String> reason) {
+  private static List<TestExecution> executions = Collections.synchronizedList(new ArrayList<TestExecution>());
 
-		TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
-		updateResult(testExecutionBuilder, "Disabled: " + reason);
-		executions.add(testExecutionBuilder.build());
+  @Override
+  public void testSuccessful(ExtensionContext context) {
 
-	}
+    TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
+    updateResult(testExecutionBuilder, PASSED);
+    executions.add(testExecutionBuilder.build());
+  }
 
-	@Override
-	public void testFailed(ExtensionContext context, Throwable cause) {
-		TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
-		updateResult(testExecutionBuilder, "Failed: " + context.getExecutionException().get().getMessage());
-		executions.add(testExecutionBuilder.build());
-	}
+  @Override
+  public void testAborted(ExtensionContext context, Throwable cause) {
 
-	@Override
-	public void afterAll(ExtensionContext context) throws Exception {
-		ResultContainer container = ResultContainer.builder().executions(executions).build();
-		writeResultsToJsonFile(container);
-	}
+    TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
+    updateResult(testExecutionBuilder, ABORTED + context.getExecutionException().get().getMessage());
+    executions.add(testExecutionBuilder.build());
+  }
 
-	private TestExecutionBuilder getTestExecutionBuilder(ExtensionContext context) {
+  @Override
+  public void testDisabled(ExtensionContext context, Optional<String> reason) {
 
-		TestExecutionBuilder testExecutionBuilder = TestExecution.builder();
+    TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
+    updateResult(testExecutionBuilder, DISABLED + reason);
+    executions.add(testExecutionBuilder.build());
 
-		testExecutionBuilder.source(
-				context.getRequiredTestClass().getCanonicalName() + "." + context.getRequiredTestMethod().getName());
+  }
 
-		if (context.getElement().isPresent() && context.getElement().get().isAnnotationPresent(TestCase.class)) {
+  @Override
+  public void testFailed(ExtensionContext context, Throwable cause) {
+    TestExecutionBuilder testExecutionBuilder = getTestExecutionBuilder(context);
+    updateResult(testExecutionBuilder, FAILED + context.getExecutionException().get().getMessage());
+    executions.add(testExecutionBuilder.build());
+  }
 
-			TestCase testCase = context.getElement().get().getAnnotation(TestCase.class);
+  @Override
+  public void afterAll(ExtensionContext context) throws Exception {
+    ResultContainer container = ResultContainer.builder().executions(executions).build();
+    writeResultsToJsonFile(container);
+  }
 
-			testExecutionBuilder.testCase(CustomTestCase.builder().name(testCase.name()).key(testCase.key()).build());
+  private TestExecutionBuilder getTestExecutionBuilder(ExtensionContext context) {
 
-		}
+    TestExecutionBuilder testExecutionBuilder = TestExecution.builder();
 
-		return testExecutionBuilder;
-	}
+    testExecutionBuilder.source(
+        context.getRequiredTestClass().getCanonicalName() + "." + context.getRequiredTestMethod().getName());
 
-	private TestExecutionBuilder updateResult(TestExecutionBuilder builder, String result) {
-		return builder.result(result);
+    if (context.getElement().isPresent() && context.getElement().get().isAnnotationPresent(TestCase.class)) {
 
-	}
+      TestCase testCase = context.getElement().get().getAnnotation(TestCase.class);
 
-	private void writeResultsToJsonFile(ResultContainer container) {
+      testExecutionBuilder.testCase(CustomTestCase.builder().name(testCase.name()).key(testCase.key()).build());
 
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			mapper.writerWithDefaultPrettyPrinter().writeValue(new File("./zephyrscale_result.json"), container);
-		} catch (IOException e) {
-			log.error(e.getLocalizedMessage());
-		}
-	}
+    }
+
+    return testExecutionBuilder;
+  }
+
+  private TestExecutionBuilder updateResult(TestExecutionBuilder builder, String result) {
+    return builder.result(result);
+
+  }
+
+  private void writeResultsToJsonFile(ResultContainer container) {
+
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      mapper.writerWithDefaultPrettyPrinter().writeValue(new File(ZEPHYRSCALE_RESULT_JSON_FILE_PATH), container);
+    } catch (IOException e) {
+      log.error(e.getLocalizedMessage());
+    }
+  }
 
 }
