@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.abtesting.academy.Junit4ExampleOneTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0 s <<< FAILURE! - in com.abtesting.academy.Junit4ExampleOneTest
-failingTest(com.abtesting.academy.Junit4ExampleOneTest)  Time elapsed: 0 s  <<< FAILURE!
-java.lang.AssertionError
-	at com.abtesting.academy.Junit4ExampleOneTest.failingTest(Junit4ExampleOneTest.java:23)
-
